@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.happening.aeven.model.PointLocation;
 import com.happening.aeven.type.IconsType;
 import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -31,6 +32,7 @@ public class MapsContent extends Fragment implements
     private MapView mapView;
     private MapboxMap mapboxMap;
     private SymbolManager symbolManager;
+    private PointLocation pointLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,14 +57,22 @@ public class MapsContent extends Fragment implements
             symbolManager.setIconAllowOverlap(true);
             symbolManager.setTextAllowOverlap(true);
 
+
+
             // Add symbol at specified lat/lon
-            moveToNextPoint(52.232537, 21.009421, MAKI_ICON_HARBOR);
+            moveToNextPoint(52.232537, 21.009421, MAKI_ICON_HARBOR); //TODO get actual point from server
         });
     }
 
     public void moveToNextPoint(double lan, double lon, IconsType icon) {
         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(buildCameraPosition(lan, lon)), 2000);
         addSymbol(lan, lon, icon.toString());
+    }
+
+    public void moveToNextPoint(PointLocation pointLocation) {
+        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(buildCameraPosition(pointLocation.getLatitude(), pointLocation.getLongitude())), 2000);
+        addSymbol(pointLocation.getLatitude(), pointLocation.getLongitude(), pointLocation.getIconsType().toString());
+        //TODO update actual point from serwer
     }
 
     private CameraPosition buildCameraPosition(double v, double v2) {
@@ -111,4 +121,11 @@ public class MapsContent extends Fragment implements
         mapView.onLowMemory();
     }
 
+    public PointLocation getPointLocation() {
+        return pointLocation;
+    }
+
+    public void setPointLocation(PointLocation pointLocation) {
+        this.pointLocation = pointLocation;
+    }
 }

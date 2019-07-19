@@ -12,7 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.happening.aeven.type.IconsType;
+import com.happening.aeven.model.PointLocation;
+import com.happening.aeven.type.DirectionToNextPoint;
 
 public class MainContent extends Fragment implements GestureDetector.OnGestureListener {
 
@@ -98,22 +99,35 @@ public class MainContent extends Fragment implements GestureDetector.OnGestureLi
 
 
     private void onSwipeTop() {
-        mapFragment.moveToNextPoint(52.241478, 21.012418, IconsType.MAKI_ICON_MONUMENT);
+        mapFragment.moveToNextPoint(goToDirectedPoint(DirectionToNextPoint.North));
+       // mapFragment.moveToNextPoint(52.241478, 21.012418, IconsType.MAKI_ICON_MONUMENT);
         Toast.makeText(fragmentBelongActivity, "Swipe top", Toast.LENGTH_LONG).show();
     }
 
     private void onSwipeBottom() {
-        mapFragment.moveToNextPoint(52.218050, 21.014459, IconsType.MAKI_ICON_LIBRARY);
+        mapFragment.moveToNextPoint(goToDirectedPoint(DirectionToNextPoint.South));
+       // mapFragment.moveToNextPoint(52.218050, 21.014459, IconsType.MAKI_ICON_LIBRARY);
         Toast.makeText(fragmentBelongActivity, "Swipe bottom", Toast.LENGTH_LONG).show();
     }
 
     private void onSwipeLeft() {
-        mapFragment.moveToNextPoint(52.231464, 20.982202, IconsType.MAKI_ICON_MUSEUM);
+        mapFragment.moveToNextPoint(goToDirectedPoint(DirectionToNextPoint.West));
+       // mapFragment.moveToNextPoint(52.231464, 20.982202, IconsType.MAKI_ICON_MUSEUM);
         Toast.makeText(fragmentBelongActivity, "Swipe left", Toast.LENGTH_LONG).show();
     }
 
     private void onSwipeRight() {
-        mapFragment.moveToNextPoint(52.239290, 21.047302, IconsType.MAKI_ICON_VOLLEYBALL);
+        mapFragment.moveToNextPoint(goToDirectedPoint(DirectionToNextPoint.East));
+        // mapFragment.moveToNextPoint(52.239290, 21.047302, IconsType.MAKI_ICON_VOLLEYBALL);
         Toast.makeText(fragmentBelongActivity, "Swipe right", Toast.LENGTH_LONG).show();
+    }
+
+    private PointLocation goToDirectedPoint(DirectionToNextPoint south) {
+        return mapFragment.getPointLocation()
+                .getNearestPoints()
+                .stream()
+                .filter(nearestPoint -> south.equals(nearestPoint.getDirectionToNextPoint()))
+                .findFirst()
+                .orElse(mapFragment.getPointLocation());
     }
 }
